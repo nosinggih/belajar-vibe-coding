@@ -83,3 +83,28 @@ export async function loginUser(payload: LoginUserPayload) {
 
   return { token };
 }
+
+/**
+ * Retrieves the current logged in user based on their session token.
+ * Throws "unauthorized" error if the session token is invalid or expired.
+ */
+export async function getCurrentUser(token: string) {
+  const [result] = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      createdAt: users.createdAt,
+    })
+    .from(sessions)
+    .innerJoin(users, eq(sessions.userId, users.id))
+    .where(eq(sessions.token, token))
+    .limit(1);
+
+  if (!result) {
+    throw new Error("unauthorized");
+  }
+
+  return result;
+}
+
