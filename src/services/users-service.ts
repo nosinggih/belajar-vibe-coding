@@ -1,9 +1,14 @@
 import { db } from "../db";
-import { users } from "../db/schema";
+import { users, sessions } from "../db/schema";
 import { eq } from "drizzle-orm";
 
 export interface RegisterUserPayload {
   name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginUserPayload {
   email: string;
   password: string;
 }
@@ -41,4 +46,40 @@ export async function registerUser(payload: RegisterUserPayload) {
   });
 
   return { success: true };
+}
+
+/**
+ * Authenticates a user and generates a session token.
+ * Throws an error if the email or password is incorrect.
+ */
+export async function loginUser(payload: LoginUserPayload) {
+  const { email, password } = payload;
+
+  // 1. Find user by email
+  const [user] = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+
+  if (!user) {
+    throw new Error("email atau password salah");
+  }
+
+  // 2. Verify password with Bun's built-in bcrypt verify
+  const isMatch = await Bun.password.verify(password, user.password);
+  if (!isMatch) {
+    throw new Error("email atau password salah");
+  }
+
+  // 3. Generate a secure random UUID token
+  const token = crypto.randomUUID();
+
+  // 4. Save session token to database
+  await db.insert(sessions).values({
+    token,
+    userId: user.id,
+  });
+
+  return { token };
 }
