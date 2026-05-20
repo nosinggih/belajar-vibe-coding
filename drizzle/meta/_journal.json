@@ -15,6 +15,20 @@
       "when": 1779249299450,
       "tag": "0001_first_azazel",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1779250172026,
+      "tag": "0002_flippant_night_thrasher",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1779250186478,
+      "tag": "0003_flippant_ben_grimm",
+      "breakpoints": true
     }
   ]
 }
