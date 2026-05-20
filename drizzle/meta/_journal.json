@@ -8,6 +8,13 @@
       "when": 1779246719169,
       "tag": "0000_lethal_reavers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1779249299450,
+      "tag": "0001_first_azazel",
+      "breakpoints": true
     }
   ]
 }
